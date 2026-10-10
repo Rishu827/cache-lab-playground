@@ -67,7 +67,7 @@ export class CacheCluster {
   private retiredEvictions = 0;
   lastRemap: RemapReport | null = null;
 
-  constructor(private nodeConfig: CacheConfig, private cfg: ClusterConfig, private rng: Rng, private sample: string[]) {
+  constructor(private nodeConfig: CacheConfig, cfg: ClusterConfig, private rng: Rng, private sample: string[]) {
     this.router = new Router(cfg.router, cfg.vnodes);
     for (let i = 0; i < Math.max(1, cfg.nodes); i++) this.spawn();
     this.router.setNodes([...this.nodes.keys()]);

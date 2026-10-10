@@ -1,4 +1,5 @@
 import { Rng } from "./prng";
+import { isMissingKey } from "./workload";
 import { Scheduler } from "./scheduler";
 
 export interface OriginConfig {
@@ -28,6 +29,7 @@ export class Origin {
   private inFlight = 0;
   private slowdown = 1;
   private outage = false;
+  private floor = 0;
 
   requests = 0;
   maxQueueDepth = 0;
@@ -51,8 +53,14 @@ export class Origin {
     return this.outage;
   }
 
+  /** Raise the baseline version of every key (a deploy changed all content). */
+  setFloor(v: number) {
+    this.floor = Math.max(this.floor, v);
+  }
+
+  /** Current version; -1 means the key does not exist. */
   version(key: string): number {
-    return this.store.get(key) ?? 0;
+    return isMissingKey(key) ? -1 : Math.max(this.store.get(key) ?? 0, this.floor);
   }
 
   read(key: string, done: Job["done"]): void {
@@ -81,7 +89,7 @@ export class Origin {
       const job = this.queue.shift()!;
       this.inFlight++;
       // A read observes the store when service *starts*, so a concurrent write can make it stale.
-      const snapshot = this.store.get(job.key) ?? 0;
+      const snapshot = this.version(job.key);
       const failed = this.outage || this.rng.next() < this.config.failureRate;
       const svc = this.serviceTime();
       this.sched.schedule(svc, () => {
