@@ -1,6 +1,7 @@
 import { getScenario } from "@cache-lab/scenarios";
 import type { SimConfig } from "@cache-lab/sim-core";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { Docs } from "./components/Docs";
 import { ChallengeDrawer } from "./components/ChallengeDrawer";
 import { ChartsPanel } from "./components/ChartsPanel";
 import { Actions } from "./components/Actions";
@@ -8,10 +9,9 @@ import { Controls } from "./components/Controls";
 import { EventLog } from "./components/EventLog";
 import { Inspector } from "./components/Inspector";
 import { ScenarioBar } from "./components/ScenarioBar";
-import { SimpleView } from "./components/SimpleView";
 import { Topology } from "./components/Topology";
 import { Transport } from "./components/Transport";
-import { bootstrap, encodeState, saveView, type ViewMode } from "./lib/urlState";
+import { bootstrap, encodeState } from "./lib/urlState";
 import { useSimulation } from "./lib/useSimulation";
 
 type Tab = "run" | "controls" | "charts" | "inspect";
@@ -39,32 +39,35 @@ export function App() {
   const [reduceMotion, setReduceMotion] = useState(false);
   const [copied, setCopied] = useState(false);
   const embed = initial.embed;
-  const [mode, setMode] = useState<ViewMode>(initial.view);
-  const chooseMode = (m: ViewMode) => {
-    setMode(m);
-    saveView(m);
-  };
+  const [page, setPage] = useState<"sim" | "docs">(new URLSearchParams(location.search).get("page") === "docs" ? "docs" : "sim");
 
   const view = useSimulation(config);
   const scenario = scenarioId ? getScenario(scenarioId) : undefined;
 
   // The whole config lives in the URL hash so any state can be shared.
   useEffect(() => {
+    if (page !== "sim") return;
     const id = setTimeout(() => history.replaceState(null, "", encodeState({ scenarioId, config })), 250);
     return () => clearTimeout(id);
-  }, [scenarioId, config]);
+  }, [scenarioId, config, page]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       const t = e.target as HTMLElement;
-      if (e.code !== "Space" || /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(t.tagName)) return;
+      if (page !== "sim" || e.code !== "Space" || /^(INPUT|SELECT|TEXTAREA|BUTTON)$/.test(t.tagName)) return;
       e.preventDefault();
       if (view.playing) view.pause();
       else view.play();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [view]);
+  }, [view, page]);
+
+  // Don't leave a run animating behind the docs page.
+  useEffect(() => {
+    if (page === "docs") view.pause();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [page]);
 
   const edit = (c: SimConfig) => {
     setConfig(c);
@@ -74,6 +77,7 @@ export function App() {
     if (!s) return;
     setScenarioId(id);
     setConfig(structuredClone(s.config));
+    setPage("sim");
   };
   const share = async () => {
     const url = `${location.origin}${location.pathname}${encodeState({ scenarioId, config })}`;
@@ -93,9 +97,9 @@ export function App() {
           <h1>Cache Lab</h1>
           <ScenarioBar scenario={scenario} onPick={pickScenario} />
           <div className="top-actions">
-            <div className="seg" role="group" aria-label="View">
-              <button aria-pressed={mode === "simple"} onClick={() => chooseMode("simple")}>Simple</button>
-              <button aria-pressed={mode === "full"} onClick={() => chooseMode("full")}>Full</button>
+            <div className="seg" role="group" aria-label="Page">
+              <button aria-pressed={page === "sim"} onClick={() => setPage("sim")}>Simulator</button>
+              <button aria-pressed={page === "docs"} onClick={() => setPage("docs")}>Docs</button>
             </div>
             <label className="check">
               <input type="checkbox" checked={reduceMotion} onChange={(e) => setReduceMotion(e.target.checked)} /> Reduce motion
@@ -106,42 +110,42 @@ export function App() {
       )}
       {embed && scenario && <p className="embed-title">{scenario.title}</p>}
 
-      {mode === "simple" ? (
-        <SimpleView scenario={scenario} config={config} onChange={edit} view={view} onShowFull={() => chooseMode("full")} />
+      {page === "docs" ? (
+        <Docs onOpenScenario={pickScenario} />
       ) : (
         <>
-          <nav className="tabs" role="tablist" aria-label="Panels">
-            {TABS.map((t) => (
-              <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}>
-                {t.label}
-              </button>
-            ))}
-          </nav>
+        <nav className="tabs" role="tablist" aria-label="Panels">
+          {TABS.map((t) => (
+            <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}>
+              {t.label}
+            </button>
+          ))}
+        </nav>
 
-          <main className="grid">
-            <Panel tab="run" active={tab} title="Simulation" className="area-run">
-              <Transport view={view} seed={config.seed} onSeed={(n) => edit({ ...config, seed: n })} durationMs={config.durationMs} />
-              <Topology sim={view.sim} recent={view.recent} />
-              <ChallengeDrawer scenario={scenario} summary={view.summary} config={config} />
-              <Stats summary={view.summary} />
-            </Panel>
-            <Panel tab="controls" active={tab} title="Controls" className="area-controls">
-              <Controls config={config} onChange={edit} />
-              <fieldset className="actions-box">
-                <legend>Failure injection (now)</legend>
-                <Actions config={config} onInject={view.inject} />
-              </fieldset>
-            </Panel>
-            <Panel tab="charts" active={tab} title="Charts" className="area-charts">
-              <ChartsPanel summary={view.summary} windowMs={config.windowMs} />
-            </Panel>
-            <Panel tab="inspect" active={tab} title="Cache inspector" className="area-inspect">
-              <Inspector sim={view.sim} />
-            </Panel>
-            <Panel tab="inspect" active={tab} title="Event log" className="area-log">
-              <EventLog sim={view.sim} />
-            </Panel>
-          </main>
+        <main className="grid">
+          <Panel tab="run" active={tab} title="Simulation" className="area-run">
+            <Transport view={view} seed={config.seed} onSeed={(n) => edit({ ...config, seed: n })} durationMs={config.durationMs} />
+            <Topology sim={view.sim} recent={view.recent} />
+            <ChallengeDrawer scenario={scenario} summary={view.summary} config={config} />
+            <Stats summary={view.summary} />
+          </Panel>
+          <Panel tab="controls" active={tab} title="Controls" className="area-controls">
+            <Controls config={config} onChange={edit} />
+            <fieldset className="actions-box">
+              <legend>Failure injection (now)</legend>
+              <Actions config={config} onInject={view.inject} />
+            </fieldset>
+          </Panel>
+          <Panel tab="charts" active={tab} title="Charts" className="area-charts">
+            <ChartsPanel summary={view.summary} windowMs={config.windowMs} />
+          </Panel>
+          <Panel tab="inspect" active={tab} title="Cache inspector" className="area-inspect">
+            <Inspector sim={view.sim} />
+          </Panel>
+          <Panel tab="inspect" active={tab} title="Event log" className="area-log">
+            <EventLog sim={view.sim} />
+          </Panel>
+        </main>
         </>
       )}
     </div>
