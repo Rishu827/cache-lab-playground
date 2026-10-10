@@ -37,7 +37,6 @@ export function App() {
   const [config, setConfig] = useState<SimConfig>(initial.state.config);
   const [tab, setTab] = useState<Tab>("run");
   const [reduceMotion, setReduceMotion] = useState(false);
-  const [copied, setCopied] = useState(false);
   const embed = initial.embed;
   const [page, setPage] = useState<"sim" | "docs">(new URLSearchParams(location.search).get("page") === "docs" ? "docs" : "sim");
 
@@ -79,17 +78,6 @@ export function App() {
     setConfig(structuredClone(s.config));
     setPage("sim");
   };
-  const share = async () => {
-    const url = `${location.origin}${location.pathname}${encodeState({ scenarioId, config })}`;
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch {
-      prompt("Copy this link:", url);
-    }
-  };
-
   return (
     <div className={`app${embed ? " embed" : ""}`} data-reduce-motion={reduceMotion}>
       {!embed && (
@@ -104,7 +92,6 @@ export function App() {
             <label className="check">
               <input type="checkbox" checked={reduceMotion} onChange={(e) => setReduceMotion(e.target.checked)} /> Reduce motion
             </label>
-            <button onClick={share}>{copied ? "Link copied" : "Share link"}</button>
           </div>
         </header>
       )}

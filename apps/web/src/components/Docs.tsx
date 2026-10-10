@@ -202,7 +202,7 @@ export function Docs({ onOpenScenario }: Props) {
               ["Origin", "Database latency, concurrent queries, failure rate."],
               ["Protections", "Coalescing, lease, TTL jitter, stale-while-revalidate, negative caching, Bloom filter."],
               ["Invalidation", "Versioned keys, tag invalidation on write."],
-              ["Failure injection", "Expire hot key, flush cache, crash write-behind buffer, database outage or slowdown, deploy, purge CDN, invalidate tag, add or remove a cache node. These act on the live run and are not part of the share link."],
+              ["Failure injection", "Expire hot key, flush cache, crash write-behind buffer, database outage or slowdown, deploy, purge CDN, invalidate tag, add or remove a cache node. These act on the live run and are not saved in the page URL."],
             ]}
           />
           <p><strong>Zipf skew</strong> controls how lopsided traffic is: at 0.5 requests are spread widely; at 1.5 a few keys get most of the traffic.</p>
@@ -228,13 +228,13 @@ export function Docs({ onOpenScenario }: Props) {
 
         <Section id="share" title="Sharing, embedding, traces">
           <ul>
-            <li><strong>Share link</strong> copies a URL containing the whole configuration and seed in the hash. Opening it reproduces the exact run.</li>
+            <li><strong>The address bar is the share link.</strong> Every setting and the seed are kept in the URL hash as you change them, so copying the URL reproduces the exact run.</li>
             <li><code>?scenario=&lt;id&gt;</code> opens a preset. IDs: {scenarios.map((s, i) => <span key={s.id}>{i ? ", " : ""}<code>{s.id}</code></span>)}.</li>
             <li><code>?embed=1</code> hides the header for use in an iframe. Example: <code>&lt;iframe src="https://your-site/?embed=1&amp;scenario=stampede" width="100%" height="900"&gt;&lt;/iframe&gt;</code></li>
             <li><code>?page=docs</code> opens this page.</li>
           </ul>
           <h3>Replaying a trace</h3>
-          <p>In Controls → Workload, open “Replay a trace” and paste or upload requests, one per line: <code>key</code>, or <code>GET key</code> / <code>PUT key</code>. Lines starting with <code>#</code> are comments. The trace loops when it ends. Keys starting with <code>x</code> are treated as nonexistent. Traces over about 400 KB are rejected, and the trace is stored in the share link, so long traces make long links.</p>
+          <p>In Controls → Workload, open “Replay a trace” and paste or upload requests, one per line: <code>key</code>, or <code>GET key</code> / <code>PUT key</code>. Lines starting with <code>#</code> are comments. The trace loops when it ends. Keys starting with <code>x</code> are treated as nonexistent. Traces over about 400 KB are rejected, and the trace is stored in the URL, so long traces make long links.</p>
         </Section>
 
         <Section id="limits" title="Accessibility and limits">

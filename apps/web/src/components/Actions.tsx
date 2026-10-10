@@ -27,7 +27,7 @@ export function Actions({ config: c, onInject }: Props) {
         {btn("Add cache node", { kind: "addNode" })}
         {c.cluster.nodes > 1 && btn("Remove cache node", { kind: "removeNode" })}
       </div>
-      <p className="muted">These act on the live run and are not saved in the share link. Scenario events (like the t=20s flush) are.</p>
+      <p className="muted">These act on the live run and are not saved in the page URL. Scenario events (like the t=20s flush) are.</p>
     </div>
   );
 }
