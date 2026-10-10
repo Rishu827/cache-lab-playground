@@ -9,6 +9,8 @@ export interface CacheEntry {
   expiresAt: number;
   hits: number;
   dirty: boolean;
+  /** Optional invalidation group; `deleteByTag` removes every entry carrying it. */
+  tag?: string;
 }
 
 export interface CacheConfig {
@@ -55,13 +57,14 @@ export class Cache {
     return { entry: e, fresh: true };
   }
 
-  set(key: string, version: number, now: number, ttlMs: number, dirty = false): SetResult {
+  set(key: string, version: number, now: number, ttlMs: number, dirty = false, tag?: string): SetResult {
     const existing = this.entries.get(key);
     if (existing) {
       existing.version = version;
       existing.storedAt = now;
       existing.expiresAt = ttlMs > 0 ? now + ttlMs : Infinity;
       existing.dirty = dirty;
+      existing.tag = tag;
       this.policy.onAccess(key);
       return { stored: true };
     }
@@ -76,13 +79,20 @@ export class Cache {
       if (this.recentEvictions.length > 20) this.recentEvictions.shift();
       evicted = victim;
     }
-    this.entries.set(key, { key, version, storedAt: now, expiresAt: ttlMs > 0 ? now + ttlMs : Infinity, hits: 0, dirty });
+    this.entries.set(key, { key, version, storedAt: now, expiresAt: ttlMs > 0 ? now + ttlMs : Infinity, hits: 0, dirty, tag });
     this.policy.onInsert(key);
     return { stored: true, evicted };
   }
 
   delete(key: string): boolean {
     return this.remove(key);
+  }
+
+  /** Remove every entry with this tag. Returns how many were removed. */
+  deleteByTag(tag: string): number {
+    let n = 0;
+    for (const e of [...this.entries.values()]) if (e.tag === tag && this.remove(e.key)) n++;
+    return n;
   }
 
   /** Force-expire a key so the next read misses (failure injection). */
