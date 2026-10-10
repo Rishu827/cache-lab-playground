@@ -67,3 +67,18 @@ Hit/miss ratio (cumulative and windowed), average/p50/p95/p99 latency, origin lo
 - **Transport**: play, pause, step one event, speed (1x to 100x), reset, and seed.
 - **Event log**: a human-readable request trace (`t=412ms GET k7 → MISS → DB 80ms → SET`), filterable by key.
 - **Challenge drawer**: goal, hints, and a pass/fail check evaluated against the metrics.
+
+## 7. Scenarios and challenges (mapped to articles)
+
+| Article | Scenario | Challenge example |
+|---|---|---|
+| 1 | Latency ladder and hit-ratio explorer | Reach p95 < 50 ms with the smallest possible cache |
+| 2 | Same workload under 5 strategies | Find the strategy that survives a crash with zero lost writes |
+| 3 | Zipf workload plus a scan burst | Keep hit ratio above 70% during the scan, using the right policy |
+| 4 | Read/write race injection | Eliminate stale reads without destroying the hit ratio |
+| 5 | Multi-layer request path | Make a deploy visible to all users immediately without disabling caching |
+| 6 | Hot key expiry spike | Keep origin queue depth under limit during a stampede |
+| 7 | 5-node cluster, add and remove a node | Cut remapped keys on node addition to under 25% |
+| 8 | Capstone sandbox | Meet a given latency and origin-load budget with a given cost |
+
+Scenarios are defined as data (config plus challenge predicate), so adding one means adding a file with no engine changes.
