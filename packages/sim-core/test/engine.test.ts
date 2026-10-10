@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { defaultConfig, Simulation, type SimConfig } from "../src";
+import { defaultConfig, defaultProtections, Simulation, type SimConfig } from "../src";
 
 const run = (cfg: SimConfig) => {
   const sim = new Simulation(cfg);
@@ -79,7 +79,7 @@ describe("protections", () => {
       workload: { keyspace: 5, ratePerSec: 500, readRatio: 1, segments: [{ fromMs: 0, pattern: { kind: "uniform" } }] },
       cache: { capacity: 100, policy: "lru", ttlMs: 2_000, latencyMs: 1 },
       origin: { latencyMs: 200, jitter: 0, concurrency: 50, failureRate: 0 },
-      protections: { coalescing, ttlJitter: 0, staleWhileRevalidateMs: 0 },
+      protections: { ...defaultProtections, coalescing },
     });
   it("request coalescing cuts origin load during a stampede", () => {
     expect(run(stampede(true)).originRequests).toBeLessThan(run(stampede(false)).originRequests / 2);
