@@ -1,3 +1,4 @@
+import type { RemapReport } from "./cluster";
 import { Histogram } from "./histogram";
 
 export interface WindowSample {
@@ -40,6 +41,11 @@ export interface Summary {
   p50: number;
   p95: number;
   p99: number;
+  /** Reads answered by each tier (layer name, "cache", "bloom") instead of the origin. */
+  hitsByTier: Record<string, number>;
+  nodeCount: number;
+  /** Report from the most recent node add/remove, if any. */
+  lastRemap: RemapReport | null;
   windows: WindowSample[];
 }
 
@@ -76,6 +82,7 @@ export class Metrics {
   private lastOriginReqs = 0;
   readonly windows: WindowSample[] = [];
   lostWrites = 0;
+  readonly hitsByTier: Record<string, number> = {};
   private peakQps = 0;
 
   constructor(readonly windowMs: number) {}
@@ -86,7 +93,8 @@ export class Metrics {
   }
 
   /** Record a completed read. `outcome` is how the cache stack answered it. */
-  read(outcome: "hit" | "miss" | "error", latencyMs: number, stale: boolean) {
+  read(outcome: "hit" | "miss" | "error", latencyMs: number, stale: boolean, servedBy = "cache") {
+    if (outcome === "hit") this.hitsByTier[servedBy] = (this.hitsByTier[servedBy] ?? 0) + 1;
     this.both((a) => {
       a.reads++;
       if (outcome === "hit") a.hits++;
@@ -132,7 +140,7 @@ export class Metrics {
     this.winStart += this.windowMs;
   }
 
-  summary(now: number, g: Gauges, maxQueueDepth: number): Summary {
+  summary(now: number, g: Gauges, maxQueueDepth: number, extra: { nodeCount: number; lastRemap: RemapReport | null }): Summary {
     const t = this.total;
     return {
       now,
@@ -141,6 +149,9 @@ export class Metrics {
       originRequests: g.originRequests, maxQueueDepth, peakOriginQps: this.peakQps, fillPct: g.fillPct,
       hitRatio: t.hits + t.misses > 0 ? t.hits / (t.hits + t.misses) : 0,
       avgLatency: t.hist.mean(), p50: t.hist.quantile(0.5), p95: t.hist.quantile(0.95), p99: t.hist.quantile(0.99),
+      hitsByTier: { ...this.hitsByTier },
+      nodeCount: extra.nodeCount,
+      lastRemap: extra.lastRemap,
       windows: this.windows,
     };
   }
