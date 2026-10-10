@@ -104,6 +104,28 @@ export class Simulation {
     this.afterEvent();
   }
 
+  /**
+   * Advance virtual time toward `t`, processing at most `maxEvents` events (so a UI frame stays bounded).
+   * Returns true if it reached `t`; otherwise the clock stops at the last processed event.
+   */
+  advanceTo(t: number, maxEvents: number): boolean {
+    for (let n = 0; n < maxEvents; n++) {
+      const next = this.sched.nextTime();
+      if (next === undefined || next > t) {
+        if (this.sched.now < t) this.sched.now = t;
+        this.afterEvent();
+        return true;
+      }
+      this.step();
+    }
+    return false;
+  }
+
+  /** Latest acknowledged version of a key (the consistency oracle's ground truth). */
+  latestVersion(key: string): number {
+    return this.truthOf(key);
+  }
+
   runToEnd(): void {
     while (this.step());
   }

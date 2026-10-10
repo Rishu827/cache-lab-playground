@@ -122,3 +122,13 @@ describe("workload mix", () => {
     expect(s.reads).toBeGreaterThan(3000);
   });
 });
+
+describe("advanceTo", () => {
+  it("honours the event budget and then reaches the target", () => {
+    const sim = new Simulation(cfg());
+    expect(sim.advanceTo(10_000, 50)).toBe(false);
+    expect(sim.now).toBeLessThan(10_000);
+    while (!sim.advanceTo(10_000, 1000));
+    expect(sim.now).toBe(10_000);
+  });
+});
