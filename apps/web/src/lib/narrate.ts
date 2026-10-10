@@ -21,7 +21,7 @@ export function narrate(s: Summary): Narration {
     const tiers = Object.entries(s.hitsByTier).filter(([, n]) => n > 0);
     if (tiers.length > 1) {
       const parts = tiers.map(([name, n]) => `${name} ${pct(n / answered)}%`).join(", ");
-      lines.push(`${pct(s.hitRatio)} of reads never reached the database (${parts}).`);
+      lines.push(`${pct(s.hitRatio)}% of reads never reached the database (${parts}).`);
     } else {
       lines.push(`Out of every 100 reads, ${pct(s.hitRatio)} were answered by the cache and ${100 - pct(s.hitRatio)} had to ask the database.`);
     }
