@@ -1,5 +1,14 @@
 import type { SimConfig, Summary } from "@cache-lab/sim-core";
 
+/** Controls a scenario can spotlight in the simple view. */
+export type ControlId =
+  | "rate" | "readRatio" | "keyspace" | "skew" | "missingRatio"
+  | "capacity" | "ttl" | "policy" | "strategy" | "flush"
+  | "originLatency" | "concurrency" | "failureRate"
+  | "coalescing" | "jitter" | "swr" | "negativeCache" | "bloom" | "lease"
+  | "versionedKeys" | "tagOnWrite" | "browserTtl" | "cdnTtl"
+  | "nodes" | "router" | "vnodes";
+
 export interface ChallengeResult {
   pass: boolean;
   /** One line explaining the current state, e.g. "p95 = 62ms (need < 50ms)". */
@@ -21,5 +30,7 @@ export interface Scenario {
   description: string;
   articleUrl?: string;
   config: SimConfig;
+  /** The few controls worth showing in the simple view. */
+  focus: ControlId[];
   challenge: Challenge;
 }

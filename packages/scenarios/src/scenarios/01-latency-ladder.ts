@@ -15,6 +15,7 @@ export const latencyLadder: Scenario = {
     cache: { capacity: 10, policy: "lru", ttlMs: 0, latencyMs: 1 },
     origin: { latencyMs: 100, jitter: 0.3, concurrency: 20, failureRate: 0 },
   }),
+  focus: ["capacity", "policy"],
   challenge: {
     goal: `Reach p95 < 50 ms with a cache of at most ${MAX_CAPACITY} entries.`,
     hints: ["p95 is a miss-dominated number: it drops once hit ratio passes ~95%.", "Zipf traffic is skewed, so the first entries are worth far more than the last."],

@@ -14,6 +14,7 @@ export const staleReads: Scenario = {
     cache: { capacity: 100, policy: "lru", ttlMs: 30_000, latencyMs: 1 },
     origin: { latencyMs: 80, jitter: 0.4, concurrency: 20, failureRate: 0 },
   }),
+  focus: ["strategy", "ttl", "versionedKeys"],
   challenge: {
     goal: "Stale reads under 1% of reads, with hit ratio still above 50%.",
     hints: ["Not caching at all is a valid but boring answer. Hit ratio must stay high.", "Which strategies touch the cache when a write happens? Does a shorter TTL help?"],

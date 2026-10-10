@@ -14,6 +14,7 @@ export const strategies: Scenario = {
     cache: { capacity: 100, policy: "lru", ttlMs: 0, latencyMs: 1 },
     events: [{ atMs: 30_000, action: { kind: "crashWriteBehind" } }],
   }),
+  focus: ["strategy", "flush"],
   challenge: {
     goal: "Survive the crash with zero lost writes, while keeping hit ratio above 40%.",
     hints: ["Write-behind acknowledges before the database has the data.", "Which strategies make the database the first stop for a write?"],
