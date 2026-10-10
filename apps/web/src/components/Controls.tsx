@@ -1,4 +1,3 @@
-import type { ControlId } from "@cache-lab/scenarios";
 import type { SimConfig } from "@cache-lab/sim-core";
 import { controlDefs, GROUP_ORDER } from "./controlDefs";
 import { TraceImport } from "./TraceImport";
@@ -26,20 +25,6 @@ export function Controls({ config, onChange }: Props) {
           </fieldset>
         );
       })}
-    </div>
-  );
-}
-
-/** Just the few controls a scenario spotlights. This is the "simple" view. */
-export function FocusControls({ config, onChange, ids }: Props & { ids: ControlId[] }) {
-  const all = controlDefs(config, onChange);
-  const shown = ids.map((id) => all.find((d) => d.id === id)).filter((d) => d && d.visible);
-  if (!shown.length) return null;
-  return (
-    <div className="focus-controls">
-      {shown.map((d) => (
-        <div key={d!.id}>{d!.node}</div>
-      ))}
     </div>
   );
 }

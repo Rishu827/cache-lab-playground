@@ -1,4 +1,3 @@
-import type { ControlId } from "@cache-lab/scenarios";
 import type { PolicyName, SimConfig, StrategyName } from "@cache-lab/sim-core";
 import type { ReactNode } from "react";
 import { getSkew, layerTtl, setSkew, withCache, withCluster, withInvalidation, withLayerTtl, withOrigin, withProtections, withWorkload } from "../lib/configEdit";
@@ -43,6 +42,14 @@ function Toggle({ label, hint, checked, onChange }: { label: string; hint?: stri
     </label>
   );
 }
+
+export type ControlId =
+  | "rate" | "readRatio" | "keyspace" | "skew" | "missingRatio"
+  | "capacity" | "ttl" | "policy" | "strategy" | "flush"
+  | "originLatency" | "concurrency" | "failureRate"
+  | "coalescing" | "jitter" | "swr" | "negativeCache" | "bloom" | "lease"
+  | "versionedKeys" | "tagOnWrite" | "browserTtl" | "cdnTtl"
+  | "nodes" | "router" | "vnodes";
 
 export type Group = "Workload" | "Cache" | "Origin (database)" | "Protections" | "Invalidation" | "Layers" | "Cluster";
 export const GROUP_ORDER: Group[] = ["Workload", "Cache", "Layers", "Cluster", "Origin (database)", "Protections", "Invalidation"];

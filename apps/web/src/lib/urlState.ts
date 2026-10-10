@@ -38,39 +38,17 @@ export function decodeState(hash: string): AppState | null {
   }
 }
 
-export type ViewMode = "simple" | "full";
-
 export interface Bootstrap {
   state: AppState;
   embed: boolean;
-  view: ViewMode;
 }
 
 /** Resolve initial state: hash wins, then ?scenario=<id>, then the first scenario. */
 export function bootstrap(loc: Pick<Location, "search" | "hash"> = window.location): Bootstrap {
   const params = new URLSearchParams(loc.search);
   const embed = params.get("embed") === "1";
-  const view: ViewMode = params.get("view") === "full" ? "full" : params.get("view") === "simple" ? "simple" : readSavedView();
   const fromHash = decodeState(loc.hash);
-  if (fromHash) return { state: fromHash, embed, view };
+  if (fromHash) return { state: fromHash, embed };
   const sc = getScenario(params.get("scenario") ?? "") ?? scenarios[0]!;
-  return { state: { scenarioId: sc.id, config: structuredClone(sc.config) }, embed, view };
-}
-
-const VIEW_KEY = "cache-lab:view";
-
-function readSavedView(): ViewMode {
-  try {
-    return localStorage.getItem(VIEW_KEY) === "full" ? "full" : "simple";
-  } catch {
-    return "simple";
-  }
-}
-
-export function saveView(v: ViewMode): void {
-  try {
-    localStorage.setItem(VIEW_KEY, v);
-  } catch {
-    /* storage unavailable (private window); the choice just won't persist */
-  }
+  return { state: { scenarioId: sc.id, config: structuredClone(sc.config) }, embed };
 }
