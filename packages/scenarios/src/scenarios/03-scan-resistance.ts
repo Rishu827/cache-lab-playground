@@ -26,7 +26,6 @@ export const scanResistance: Scenario = {
     cache: { capacity: 100, policy: "lru", ttlMs: 0, latencyMs: 1 },
     origin: { latencyMs: 80, jitter: 0.3, concurrency: 40, failureRate: 0 },
   }),
-  focus: ["policy", "capacity"],
   challenge: {
     goal: "Keep the hit ratio above 45% while the scan runs (t=20s to 40s). Half of that traffic is one-time keys, so ~50% is the ceiling.",
     hints: ["A scan touches each key once. Which policies let one-hit wonders push out hot keys?", "Policies that track frequency can refuse to admit a key they have barely seen."],

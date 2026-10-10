@@ -35,9 +35,8 @@ const wrongFixes: Record<string, Fix[]> = {
 };
 
 describe("scenarios", () => {
-  it("have unique ids and a focus list", () => {
+  it("have unique ids", () => {
     expect(new Set(scenarios.map((s) => s.id)).size).toBe(scenarios.length);
-    for (const s of scenarios) expect(s.focus.length).toBeGreaterThan(0);
   });
   it("cover every article 1-8", () => {
     expect(new Set(scenarios.map((s) => s.article))).toEqual(new Set([1, 2, 3, 4, 5, 6, 7, 8]));

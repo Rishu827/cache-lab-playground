@@ -18,7 +18,6 @@ export const clusterResize: Scenario = {
       { atMs: 50_000, action: { kind: "removeNode" } },
     ],
   }),
-  focus: ["router", "vnodes", "nodes"],
   challenge: {
     goal: "Cut the share of keys that move when the sixth node joins to under 25%.",
     hints: ["Modulo routing changes N for every key. What mapping only moves keys near the new node?", "With few virtual nodes the ring is lumpy; more vnodes smooth the split."],

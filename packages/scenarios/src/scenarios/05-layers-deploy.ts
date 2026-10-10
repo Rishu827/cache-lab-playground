@@ -17,7 +17,6 @@ export const layersDeploy: Scenario = {
     cache: { capacity: 200, policy: "lru", ttlMs: 60_000, latencyMs: 2 },
     events: [{ atMs: 20_000, action: { kind: "deploy" } }],
   }),
-  focus: ["versionedKeys", "browserTtl", "cdnTtl", "ttl"],
   challenge: {
     goal: "Make the deploy visible to everyone right away (stale reads under 1%) while browsers and the CDN still answer at least 30% of reads.",
     hints: ["Purging the CDN does nothing for copies already sitting in browsers.", "Turning TTLs to zero fixes staleness but throws caching away. What if a new version had a new cache key?"],

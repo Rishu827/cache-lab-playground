@@ -15,7 +15,6 @@ export const stampede: Scenario = {
     origin: { latencyMs: 300, jitter: 0.2, concurrency: 24, failureRate: 0 },
     events: [{ atMs: 20_000, action: { kind: "flushCache" } }],
   }),
-  focus: ["coalescing", "lease", "jitter", "swr"],
   challenge: {
     goal: `Keep origin queue depth at or below ${QUEUE_LIMIT} through the cache flush at t=20s.`,
     hints: ["Many requests miss the same key at once. Why fetch it more than once?", "Jittering TTLs spreads later expiries out; serving stale data hides refresh time."],

@@ -15,7 +15,6 @@ export const penetration: Scenario = {
     cache: { capacity: 300, policy: "lru", ttlMs: 0, latencyMs: 1 },
     origin: { latencyMs: 100, jitter: 0.2, concurrency: 20, failureRate: 0 },
   }),
-  focus: ["negativeCache", "bloom", "missingRatio"],
   challenge: {
     goal: `After a 10s warm-up, keep origin queue depth at or below ${QUEUE_LIMIT}.`,
     hints: ["Remember that \"not found\" is also an answer. Can the cache hold it, briefly?", "A Bloom filter can answer \"definitely not here\" without asking anyone. Trade-off: memory and a small false-positive rate."],

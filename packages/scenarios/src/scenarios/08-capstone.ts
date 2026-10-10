@@ -26,7 +26,6 @@ export const capstone: Scenario = {
     cache: { capacity: 30, policy: "lru", ttlMs: 60_000, latencyMs: 1 },
     origin: { latencyMs: 100, jitter: 0.3, concurrency: 20, failureRate: 0 },
   }),
-  focus: ["capacity", "policy", "coalescing", "ttl"],
   challenge: {
     goal: `p95 < ${BUDGET.p95}ms, peak origin load < ${BUDGET.originQps} QPS, cache cost ≤ ${BUDGET.cost} entries.`,
     hints: ["Cost is just cache capacity here: spend it where the hit ratio gain is largest.", "Policy and protections are free; capacity is not."],
