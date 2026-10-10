@@ -1,0 +1,16 @@
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.turbo/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.vscode/*
+!.vscode/extensions.json
+.idea/
