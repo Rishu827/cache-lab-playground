@@ -26,7 +26,7 @@ function Dot({ e, start, stop }: { e: RequestEvent; start: number; stop: number 
 }
 
 export function Topology({ sim, recent }: { sim: Simulation; recent: RequestEvent[] }) {
-  const cols: Col[] = [{ id: "client", title: "Client" }, ...sim.tiers.map((t) => ({ id: t.cfg.name, title: t.cfg.name[0]!.toUpperCase() + t.cfg.name.slice(1) })), { id: "cache", title: "Cache" }, { id: "origin", title: "Origin" }];
+  const cols: Col[] = [{ id: "client", title: "Client" }, ...sim.tiers.map((t) => ({ id: t.cfg.name, title: t.cfg.name.length <= 3 ? t.cfg.name.toUpperCase() : t.cfg.name[0]!.toUpperCase() + t.cfg.name.slice(1) })), { id: "cache", title: "Cache" }, { id: "origin", title: "Origin" }];
   const n = cols.length;
   const boxW = n <= 4 ? 100 : n === 5 ? 90 : 78;
   const step = n > 1 ? (W - boxW - 20) / (n - 1) : 0;
@@ -56,7 +56,7 @@ export function Topology({ sim, recent }: { sim: Simulation; recent: RequestEven
         const bw = Math.max(4, (inner - (nodeStats.length - 1) * 3) / nodeStats.length);
         return (
           <>
-            <text x={cx} y={BOX_Y + 56} textAnchor="middle" className="sub">{nodeStats.length} nodes · {sim.cache.size} entries</text>
+            <text x={cx} y={BOX_Y + 56} textAnchor="middle" className="sub">{nodeStats.length} nodes</text>
             {nodeStats.map((s, i) => {
               const bx = cx - inner / 2 + i * (bw + 3);
               const fill = Math.min(1, s.size / Math.max(1, s.capacity)) * 36;
