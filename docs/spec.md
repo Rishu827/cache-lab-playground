@@ -27,3 +27,28 @@ cache-lab/
     web/             # React UI
   docs/              # spec, scenario authoring guide
 ```
+
+## 4. Simulation model
+
+Discrete-event simulation with a virtual clock in ms, driven by a min-heap event queue. This gives step, pause, and fast-forward for free.
+
+Seeded PRNG (e.g. mulberry32), so a run is a pure function of `(config, seed)`.
+
+### Components (each with a small interface)
+
+- **WorkloadGenerator**: uniform, Zipf (configurable skew), sequential scan, burst, hot-key, and trace replay. Supports a read/write ratio.
+- **Cache**: get/set/delete, capacity, TTL, and pluggable `EvictionPolicy`.
+- **Origin (DB)**: latency distribution, a concurrency limit with queueing (so overload is visible), failure/slowdown injection, and a versioned data store used as ground truth.
+- **Layer (v2)**: browser, CDN, and app caches chained in front, each with its own TTL and headers.
+- **Cluster (v2)**: N cache nodes plus a router (modulo vs consistent hash with vnodes).
+
+### Pluggable behaviors
+
+- **Strategies**: cache-aside, read-through, write-through, write-behind (with a flush interval and a crash event), write-around.
+- **Eviction**: FIFO, LRU, LFU, Random, then TinyLFU.
+- **Invalidation**: TTL, explicit delete, versioned keys, tags, stale-while-revalidate.
+- **Protections**: request coalescing, TTL jitter, lock/lease, negative caching, Bloom filter.
+
+### Consistency oracle
+
+Every read is compared with the origin's latest version, so the UI can count stale reads and show a timeline of when they occurred. This powers the invalidation and race-condition lessons.
