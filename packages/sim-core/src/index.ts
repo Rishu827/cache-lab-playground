@@ -8,3 +8,6 @@ export * from "./prng";
 export * from "./scheduler";
 export * from "./workload";
 export * from "./defaults";
+export * from "./bloom";
+export * from "./cluster";
+export * from "./hash";
