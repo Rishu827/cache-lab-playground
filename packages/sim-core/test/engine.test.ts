@@ -104,9 +104,21 @@ describe("origin overload", () => {
 
 describe("performance", () => {
   it("simulates ~100k requests in about a second", () => {
-    const t = performance.now();
+    const t = Date.now();
     const s = run(cfg({ durationMs: 100_000, workload: { ...cfg().workload, ratePerSec: 1000 } }));
     expect(s.reads + s.writes).toBeGreaterThan(90_000);
-    expect(performance.now() - t).toBeLessThan(2500);
+    expect(Date.now() - t).toBeLessThan(2500);
+  });
+});
+
+describe("workload mix", () => {
+  it("interleaves patterns by weight", () => {
+    const zipf = { kind: "zipf", skew: 1.2 } as const;
+    const s = run(
+      cfg({
+        workload: { keyspace: 1000, ratePerSec: 200, readRatio: 1, segments: [{ fromMs: 0, pattern: { kind: "mix", parts: [{ weight: 1, pattern: zipf }, { weight: 1, pattern: { kind: "scan" } }] } }] },
+      }),
+    );
+    expect(s.reads).toBeGreaterThan(3000);
   });
 });

@@ -8,7 +8,9 @@ export type Pattern =
   /** `hotFraction` of requests hit `hotKeys` keys; the rest are uniform. */
   | { kind: "hotkey"; hotFraction: number; hotKeys: number }
   /** Replay a fixed list of keys in a loop. */
-  | { kind: "trace"; keys: string[] };
+  | { kind: "trace"; keys: string[] }
+  /** Interleave several patterns by weight, e.g. a background scan on top of steady skewed traffic. */
+  | { kind: "mix"; parts: { weight: number; pattern: Pattern }[] };
 
 /** From `fromMs` onwards, the workload uses these settings (until the next segment). */
 export interface WorkloadSegment {
@@ -85,6 +87,12 @@ export class WorkloadGenerator {
         return this.rng.next() < p.hotFraction ? keyName(this.rng.int(Math.min(p.hotKeys, n))) : keyName(this.rng.int(n));
       case "trace":
         return p.keys[this.tracePos++ % p.keys.length] ?? keyName(0);
+      case "mix": {
+        const total = p.parts.reduce((a, x) => a + x.weight, 0);
+        let u = this.rng.next() * total;
+        for (const part of p.parts) if ((u -= part.weight) < 0) return this.pickKey(part.pattern);
+        return this.pickKey(p.parts[p.parts.length - 1]!.pattern);
+      }
     }
   }
 
