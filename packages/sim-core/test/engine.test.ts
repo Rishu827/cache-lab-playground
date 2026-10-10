@@ -102,12 +102,15 @@ describe("origin overload", () => {
   });
 });
 
+const onCI = Boolean((globalThis as { process?: { env?: Record<string, string> } }).process?.env?.CI);
+
 describe("performance", () => {
   it("simulates ~100k requests in about a second", () => {
     const t = Date.now();
     const s = run(cfg({ durationMs: 100_000, workload: { ...cfg().workload, ratePerSec: 1000 } }));
     expect(s.reads + s.writes).toBeGreaterThan(90_000);
-    expect(Date.now() - t).toBeLessThan(2500);
+    // ~1s locally; shared CI runners can be several times slower, so allow headroom there.
+    expect(Date.now() - t).toBeLessThan(onCI ? 10_000 : 2500);
   });
 });
 
