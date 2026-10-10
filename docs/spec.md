@@ -52,3 +52,7 @@ Seeded PRNG (e.g. mulberry32), so a run is a pure function of `(config, seed)`.
 ### Consistency oracle
 
 Every read is compared with the origin's latest version, so the UI can count stale reads and show a timeline of when they occurred. This powers the invalidation and race-condition lessons.
+
+## 5. Metrics
+
+Hit/miss ratio (cumulative and windowed), average/p50/p95/p99 latency, origin load (QPS and queue depth), evictions, stale read count, error count, and cache fill percentage. Every metric is sampled per time window for charting.
