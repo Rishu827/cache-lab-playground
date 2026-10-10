@@ -66,6 +66,8 @@ export class CacheCluster {
   private nextId = 0;
   private retiredEvictions = 0;
   lastRemap: RemapReport | null = null;
+  /** Every resize so far, oldest first. */
+  readonly remaps: RemapReport[] = [];
 
   constructor(private nodeConfig: CacheConfig, cfg: ClusterConfig, private rng: Rng, private sample: string[]) {
     this.router = new Router(cfg.router, cfg.vnodes);
@@ -89,13 +91,15 @@ export class CacheCluster {
     for (const [k, id] of before) if (this.router.route(k) !== id) moved++;
     let residentMoved = 0;
     for (const e of resident) if (this.router.route(e.key) !== residentBefore.get(e.key)) residentMoved++;
-    return (this.lastRemap = {
+    const rep: RemapReport = {
       kind,
       nodeId,
       nodesAfter: this.nodes.size,
       remapFraction: before.size ? moved / before.size : 0,
       residentRemapFraction: resident.length ? residentMoved / resident.length : 0,
-    });
+    };
+    this.remaps.push(rep);
+    return (this.lastRemap = rep);
   }
 
   addNode(): RemapReport {

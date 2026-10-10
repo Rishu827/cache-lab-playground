@@ -46,6 +46,8 @@ export interface Summary {
   nodeCount: number;
   /** Report from the most recent node add/remove, if any. */
   lastRemap: RemapReport | null;
+  /** Every node add/remove so far. */
+  remaps: RemapReport[];
   windows: WindowSample[];
 }
 
@@ -140,7 +142,7 @@ export class Metrics {
     this.winStart += this.windowMs;
   }
 
-  summary(now: number, g: Gauges, maxQueueDepth: number, extra: { nodeCount: number; lastRemap: RemapReport | null }): Summary {
+  summary(now: number, g: Gauges, maxQueueDepth: number, extra: { nodeCount: number; lastRemap: RemapReport | null; remaps: RemapReport[] }): Summary {
     const t = this.total;
     return {
       now,
@@ -152,6 +154,7 @@ export class Metrics {
       hitsByTier: { ...this.hitsByTier },
       nodeCount: extra.nodeCount,
       lastRemap: extra.lastRemap,
+      remaps: [...extra.remaps],
       windows: this.windows,
     };
   }

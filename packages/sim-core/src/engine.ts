@@ -200,6 +200,7 @@ export class Simulation {
     return this.metrics.summary(this.now, this.gauges(), this.origin.maxQueueDepth, {
       nodeCount: this.cache.nodeCount,
       lastRemap: this.cache.lastRemap,
+      remaps: this.cache.remaps,
     });
   }
 
