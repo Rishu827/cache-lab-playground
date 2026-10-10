@@ -72,8 +72,8 @@ select, input[type="number"], input[type="search"] { background: var(--panel); b
 .node.outage rect { stroke: var(--bad); stroke-dasharray: 5 3; }
 .node text { fill: var(--text); font-size: 14px; font-weight: 600; }
 .node text.sub { font-size: 11px; font-weight: 400; fill: var(--muted); }
-.meter-bg { fill: var(--border); }
-.meter { fill: var(--c1); stroke: none !important; }
+.node rect.meter-bg { fill: var(--border); stroke: none; }
+.node rect.meter { fill: var(--c1); stroke: none; }
 .wire { stroke: var(--border); stroke-width: 2; stroke-dasharray: 4 4; }
 .dot-hit { fill: var(--c1); }
 .dot-miss { fill: var(--c2); }
@@ -82,9 +82,9 @@ select, input[type="number"], input[type="search"] { background: var(--panel); b
 .dot { animation: travel 0.9s ease-in-out forwards; }
 .dot-hit.dot { animation-name: travel-hit; }
 .dot-miss.dot, .dot-write.dot { animation-name: travel-miss; }
-@keyframes travel-hit { 0% { transform: translateX(60px); opacity: 1; } 50% { transform: translateX(260px); } 100% { transform: translateX(60px); opacity: 0; } }
-@keyframes travel-miss { 0% { transform: translateX(60px); opacity: 1; } 50% { transform: translateX(260px); } 75% { transform: translateX(460px); } 100% { transform: translateX(60px); opacity: 0; } }
-@keyframes travel { 0% { transform: translateX(60px); opacity: 1; } 75% { transform: translateX(460px); } 100% { transform: translateX(460px); opacity: 0; } }
+@keyframes travel-hit { 0% { transform: translateX(115px); opacity: 1; } 50% { transform: translateX(205px); } 100% { transform: translateX(115px); opacity: 0; } }
+@keyframes travel-miss { 0% { transform: translateX(115px); opacity: 1; } 40% { transform: translateX(205px); } 70% { transform: translateX(405px); } 100% { transform: translateX(115px); opacity: 0; } }
+@keyframes travel { 0% { transform: translateX(115px); opacity: 1; } 70% { transform: translateX(405px); } 100% { transform: translateX(115px); opacity: 0; } }
 .key { display: flex; gap: 14px; list-style: none; margin: 4px 0 0; padding: 0; font-size: 12px; color: var(--muted); }
 .key svg { vertical-align: middle; }
 [data-reduce-motion="true"] .dot { animation: none; opacity: 0; }

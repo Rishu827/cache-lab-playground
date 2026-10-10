@@ -24,10 +24,17 @@ const W = 320;
 const H = 130;
 const PAD = { l: 38, r: 8, t: 8, b: 18 };
 
+/** Round up to 1/2/5 x 10^k so axis ticks read cleanly. */
+function niceCeil(v: number): number {
+  const p = Math.pow(10, Math.floor(Math.log10(v)));
+  const f = v / p;
+  return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
+}
+
 export function Chart({ title, series, windowMs, kind = "line", yMax, format = (v) => v.toFixed(0) }: Props) {
   const id = useId();
   const n = Math.max(...series.map((s) => s.values.length), 0);
-  const max = yMax ?? Math.max(1, ...series.flatMap((s) => s.values)) * 1.1;
+  const max = yMax ?? niceCeil(Math.max(1, ...series.flatMap((s) => s.values)));
   const x = (i: number) => PAD.l + (n <= 1 ? 0 : (i / (n - 1)) * (W - PAD.l - PAD.r));
   const y = (v: number) => PAD.t + (1 - Math.min(v, max) / max) * (H - PAD.t - PAD.b);
   const barW = Math.max(1, (W - PAD.l - PAD.r) / Math.max(n, 1) - 1);
