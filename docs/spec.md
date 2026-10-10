@@ -56,3 +56,14 @@ Every read is compared with the origin's latest version, so the UI can count sta
 ## 5. Metrics
 
 Hit/miss ratio (cumulative and windowed), average/p50/p95/p99 latency, origin load (QPS and queue depth), evictions, stale read count, error count, and cache fill percentage. Every metric is sampled per time window for charting.
+
+## 6. UI layout
+
+- **Scenario bar**: pick a preset, see the article link and a short description.
+- **Topology canvas**: boxes for Client → Cache → Origin, with animated request dots (green for hit, orange for miss, red for error).
+- **Cache inspector**: grid of entries showing key, version, age/TTL remaining, and hit count. Evicted and stale entries are highlighted.
+- **Controls panel**: workload, cache size, TTL, policy, strategy, origin latency/concurrency, and a failure-injection panel with buttons like "expire hot key now" or "crash write-behind buffer".
+- **Charts panel**: hit ratio, latency percentiles, origin load, and a stale-read timeline.
+- **Transport**: play, pause, step one event, speed (1x to 100x), reset, and seed.
+- **Event log**: a human-readable request trace (`t=412ms GET k7 → MISS → DB 80ms → SET`), filterable by key.
+- **Challenge drawer**: goal, hints, and a pass/fail check evaluated against the metrics.
