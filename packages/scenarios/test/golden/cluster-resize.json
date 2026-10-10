@@ -1,0 +1,99 @@
+{
+  "now": 70060.634,
+  "reads": 28071,
+  "writes": 0,
+  "hits": 22311,
+  "misses": 5760,
+  "errors": 0,
+  "staleReads": 0,
+  "lostWrites": 0,
+  "evictions": 4504,
+  "originRequests": 5760,
+  "maxQueueDepth": 1,
+  "peakOriginQps": 216,
+  "fillPct": 100,
+  "hitRatio": 0.795,
+  "avgLatency": 13.537,
+  "p50": 1.01,
+  "p95": 69.942,
+  "p99": 83.587,
+  "hitsByTier": {
+    "cache": 22311
+  },
+  "nodeCount": 5,
+  "remaps": [
+    {
+      "kind": "add",
+      "nodeId": 5,
+      "nodesAfter": 6,
+      "remapFraction": 0.839,
+      "residentRemapFraction": 0.843
+    },
+    {
+      "kind": "remove",
+      "nodeId": 5,
+      "nodesAfter": 5,
+      "remapFraction": 0.839,
+      "residentRemapFraction": 0.834
+    }
+  ],
+  "windowCount": 70,
+  "sampledWindows": [
+    {
+      "t": 0,
+      "hitRatio": 0.447,
+      "p95": 77.221,
+      "originQps": 216,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    },
+    {
+      "t": 10000,
+      "hitRatio": 0.821,
+      "p95": 67.226,
+      "originQps": 69,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    },
+    {
+      "t": 20000,
+      "hitRatio": 0.824,
+      "p95": 64.615,
+      "originQps": 73,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    },
+    {
+      "t": 30000,
+      "hitRatio": 0.43,
+      "p95": 78.766,
+      "originQps": 196,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    },
+    {
+      "t": 40000,
+      "hitRatio": 0.876,
+      "p95": 63.348,
+      "originQps": 58,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    },
+    {
+      "t": 50000,
+      "hitRatio": 0.48,
+      "p95": 77.221,
+      "originQps": 216,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    },
+    {
+      "t": 60000,
+      "hitRatio": 0.793,
+      "p95": 71.341,
+      "originQps": 75,
+      "maxQueueDepth": 0,
+      "staleReads": 0
+    }
+  ]
+}

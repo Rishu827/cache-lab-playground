@@ -1,0 +1,60 @@
+{
+  "now": 40166.555,
+  "reads": 12085,
+  "writes": 0,
+  "hits": 5247,
+  "misses": 6838,
+  "errors": 0,
+  "staleReads": 0,
+  "lostWrites": 0,
+  "evictions": 479,
+  "originRequests": 6838,
+  "maxQueueDepth": 71,
+  "peakOriginQps": 244,
+  "fillPct": 100,
+  "hitRatio": 0.434,
+  "avgLatency": 86.786,
+  "p50": 85.259,
+  "p95": 334.311,
+  "p99": 407.523,
+  "hitsByTier": {
+    "cache": 5247
+  },
+  "nodeCount": 1,
+  "remaps": [],
+  "windowCount": 40,
+  "sampledWindows": [
+    {
+      "t": 0,
+      "hitRatio": 0.268,
+      "p95": 308.852,
+      "originQps": 244,
+      "maxQueueDepth": 51,
+      "staleReads": 0
+    },
+    {
+      "t": 10000,
+      "hitRatio": 0.421,
+      "p95": 137.133,
+      "originQps": 167,
+      "maxQueueDepth": 8,
+      "staleReads": 0
+    },
+    {
+      "t": 20000,
+      "hitRatio": 0.46,
+      "p95": 131.808,
+      "originQps": 158,
+      "maxQueueDepth": 8,
+      "staleReads": 0
+    },
+    {
+      "t": 30000,
+      "hitRatio": 0.457,
+      "p95": 139.876,
+      "originQps": 174,
+      "maxQueueDepth": 9,
+      "staleReads": 0
+    }
+  ]
+}

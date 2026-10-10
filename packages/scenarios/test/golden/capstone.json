@@ -1,0 +1,124 @@
+{
+  "now": 118264.609,
+  "reads": 31403,
+  "writes": 1657,
+  "hits": 10596,
+  "misses": 20807,
+  "errors": 0,
+  "staleReads": 1876,
+  "lostWrites": 0,
+  "evictions": 12958,
+  "originRequests": 22464,
+  "maxQueueDepth": 5333,
+  "peakOriginQps": 525,
+  "fillPct": 100,
+  "hitRatio": 0.337,
+  "avgLatency": 8674.627,
+  "p50": 1211.049,
+  "p95": 27126.174,
+  "p99": 27668.697,
+  "hitsByTier": {
+    "cache": 10596
+  },
+  "nodeCount": 1,
+  "remaps": [],
+  "windowCount": 118,
+  "sampledWindows": [
+    {
+      "t": 0,
+      "hitRatio": 0.39,
+      "p95": 268.874,
+      "originQps": 189,
+      "maxQueueDepth": 33,
+      "staleReads": 31
+    },
+    {
+      "t": 10000,
+      "hitRatio": 0.381,
+      "p95": 527.174,
+      "originQps": 226,
+      "maxQueueDepth": 107,
+      "staleReads": 45
+    },
+    {
+      "t": 20000,
+      "hitRatio": 0.328,
+      "p95": 1187.303,
+      "originQps": 214,
+      "maxQueueDepth": 242,
+      "staleReads": 20
+    },
+    {
+      "t": 30000,
+      "hitRatio": 0.249,
+      "p95": 1235.27,
+      "originQps": 231,
+      "maxQueueDepth": 218,
+      "staleReads": 4
+    },
+    {
+      "t": 40000,
+      "hitRatio": 0.536,
+      "p95": 1118.822,
+      "originQps": 407,
+      "maxQueueDepth": 408,
+      "staleReads": 10
+    },
+    {
+      "t": 50000,
+      "hitRatio": 0.39,
+      "p95": 6518.928,
+      "originQps": 504,
+      "maxQueueDepth": 2779,
+      "staleReads": 15
+    },
+    {
+      "t": 60000,
+      "hitRatio": 0.353,
+      "p95": 11808.136,
+      "originQps": 186,
+      "maxQueueDepth": 4992,
+      "staleReads": 43
+    },
+    {
+      "t": 70000,
+      "hitRatio": 0.374,
+      "p95": 17897.194,
+      "originQps": 177,
+      "maxQueueDepth": 5038,
+      "staleReads": 24
+    },
+    {
+      "t": 80000,
+      "hitRatio": 0.377,
+      "p95": 23614.967,
+      "originQps": 202,
+      "maxQueueDepth": 5119,
+      "staleReads": 23
+    },
+    {
+      "t": 90000,
+      "hitRatio": 0,
+      "p95": 26594.288,
+      "originQps": 1,
+      "maxQueueDepth": 5333,
+      "staleReads": 3
+    },
+    {
+      "t": 100000,
+      "hitRatio": 0,
+      "p95": 26594.288,
+      "originQps": 0,
+      "maxQueueDepth": 3436,
+      "staleReads": 2
+    },
+    {
+      "t": 110000,
+      "hitRatio": 0,
+      "p95": 27126.174,
+      "originQps": 0,
+      "maxQueueDepth": 1561,
+      "staleReads": 6
+    }
+  ]
+}

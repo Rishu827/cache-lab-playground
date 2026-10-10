@@ -1,0 +1,76 @@
+{
+  "now": 60082.519,
+  "reads": 8457,
+  "writes": 3627,
+  "hits": 8369,
+  "misses": 88,
+  "errors": 0,
+  "staleReads": 8279,
+  "lostWrites": 0,
+  "evictions": 0,
+  "originRequests": 3715,
+  "maxQueueDepth": 10,
+  "peakOriginQps": 100,
+  "fillPct": 30,
+  "hitRatio": 0.99,
+  "avgLatency": 27.447,
+  "p50": 1.01,
+  "p95": 119.383,
+  "p99": 167.165,
+  "hitsByTier": {
+    "cache": 8369
+  },
+  "nodeCount": 1,
+  "remaps": [],
+  "windowCount": 60,
+  "sampledWindows": [
+    {
+      "t": 0,
+      "hitRatio": 0.682,
+      "p95": 148.437,
+      "originQps": 100,
+      "maxQueueDepth": 10,
+      "staleReads": 71
+    },
+    {
+      "t": 10000,
+      "hitRatio": 1,
+      "p95": 134.444,
+      "originQps": 61,
+      "maxQueueDepth": 0,
+      "staleReads": 143
+    },
+    {
+      "t": 20000,
+      "hitRatio": 1,
+      "p95": 112.497,
+      "originQps": 48,
+      "maxQueueDepth": 0,
+      "staleReads": 135
+    },
+    {
+      "t": 30000,
+      "hitRatio": 0.736,
+      "p95": 142.673,
+      "originQps": 95,
+      "maxQueueDepth": 0,
+      "staleReads": 82
+    },
+    {
+      "t": 40000,
+      "hitRatio": 1,
+      "p95": 117.042,
+      "originQps": 58,
+      "maxQueueDepth": 0,
+      "staleReads": 123
+    },
+    {
+      "t": 50000,
+      "hitRatio": 1,
+      "p95": 106.008,
+      "originQps": 57,
+      "maxQueueDepth": 0,
+      "staleReads": 129
+    }
+  ]
+}
