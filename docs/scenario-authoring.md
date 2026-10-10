@@ -15,7 +15,6 @@ A scenario is data: a starting `SimConfig` plus a challenge predicate. Adding on
      description: "One or two sentences shown in the scenario bar.",
      articleUrl: "https://example.com/article",   // optional
      config: defaultConfig({ /* overrides */ }),
-     focus: ["capacity", "policy"],   // controls shown in the simple view (see ControlId in types.ts)
      challenge: {
        goal: "What the learner must achieve.",
        hints: ["Nudge first", "Stronger nudge second"],
@@ -41,3 +40,5 @@ A scenario is data: a starting `SimConfig` plus a challenge predicate. Adding on
 ## Features you can use in a scenario
 
 `workload.clients`, `workload.missingRatio`, `layers` (browser/CDN), `cluster`, `invalidation` (tags, versioned keys), `protections` (negative cache, Bloom, lease), and scheduled actions such as `deploy`, `purgeShared`, `addNode`, `removeNode`, `invalidateTag`.
+
+The in-app Docs page lists every scenario automatically from the registry, so a new scenario appears there with its goal and hints with no extra work.

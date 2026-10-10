@@ -30,10 +30,10 @@ npm run build        # static build in apps/web/dist
 
 URL parameters: `?scenario=<id>` picks a preset, `?embed=1` hides the chrome for iframes. All config and the seed are stored in the URL hash, so any link reproduces the exact run.
 
-## Views
+## Pages
 
-- **Simple** (default): one story per scenario. The goal, the topology, a plain-English summary, three headline numbers, only the 2-4 controls the scenario spotlights, and one chart you can switch between metrics. Failure injection and the cache/log inspectors are tucked into collapsible sections.
-- **Full**: every control, six charts, inspector, event log, seed and single-step. Toggle in the header, or open with `?view=full`.
+- **Simulator**: scenario bar, transport, topology, controls, charts, cache inspector, event log, challenge drawer.
+- **Docs**: in-app documentation (how requests flow, reading the screen, every policy/strategy/protection, controls, scenarios with hints, sharing and embedding). Open from the header or with `?page=docs`.
 
 ## What's in the engine
 
