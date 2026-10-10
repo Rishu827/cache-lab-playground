@@ -6,15 +6,15 @@ An interactive, in-browser cache simulator. Run a request workload against a con
 - **Deterministic and shareable** — the same config produces the same run, and the whole config lives in the URL.
 - **Zero backend** — static site, free to host, embeddable via iframe.
 
-> Status: v1 in progress. Full plan in [docs/spec.md](docs/spec.md); authoring guide in [docs/scenario-authoring.md](docs/scenario-authoring.md).
+> Status: v1 is feature-complete against the original plan in [docs/spec.md](docs/spec.md). Not deployed yet, and scenarios don't link to articles yet (`articleUrl` is optional and unset). Authoring guide: [docs/scenario-authoring.md](docs/scenario-authoring.md).
 
-## Planned layout
+## Layout
 
 ```
 packages/sim-core/   engine, components, strategies, policies, metrics
 packages/scenarios/  scenario definitions + challenge checks
 apps/web/            React UI
-docs/                spec, scenario authoring guide
+docs/                original spec, scenario authoring guide
 ```
 
 ## Develop
