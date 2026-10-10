@@ -6,7 +6,8 @@ import { Metrics, type Summary } from "./metrics";
 import { Origin, type OriginConfig } from "./origin";
 import { Rng } from "./prng";
 import { Scheduler } from "./scheduler";
-import { isMissingKey, keyName, WorkloadGenerator, type WorkloadConfig } from "./workload";
+import { hash32 } from "./hash";
+import { isMissingKey, keyName, WorkloadGenerator, type Pattern, type WorkloadConfig } from "./workload";
 
 export type StrategyName = "cache-aside" | "read-through" | "write-through" | "write-behind" | "write-around";
 
@@ -106,6 +107,19 @@ type FetchCb = (r: FetchResult, svc: number) => void;
 
 const LOG_LIMIT = 1000;
 
+function traceKeys(p: Pattern): string[] {
+  if (p.kind === "trace") return p.keys;
+  if (p.kind === "mix") return p.parts.flatMap((x) => traceKeys(x.pattern));
+  return [];
+}
+
+/** Every key that exists: k0..k{keyspace-1} plus any keys named by a replayed trace. */
+export function existingKeys(w: WorkloadConfig): string[] {
+  const keys = new Set(Array.from({ length: w.keyspace }, (_, i) => keyName(i)));
+  for (const s of w.segments) for (const k of traceKeys(s.pattern)) if (!isMissingKey(k)) keys.add(k);
+  return [...keys];
+}
+
 /** Strip the `@version` suffix that versioned keys add. */
 export const baseKey = (cacheKey: string) => cacheKey.split("@")[0]!;
 
@@ -134,13 +148,13 @@ export class Simulation {
   constructor(readonly config: SimConfig) {
     this.rng = new Rng(config.seed);
     this.workload = new WorkloadGenerator(config.workload, this.rng);
-    const sample = Array.from({ length: config.workload.keyspace }, (_, i) => keyName(i));
+    const sample = existingKeys(config.workload);
     this.cache = new CacheCluster(config.cache, config.cluster, this.rng, sample);
     this.tiers = config.layers.map((cfg) => ({ cfg, caches: new Map() }));
     this.origin = new Origin(config.origin, this.sched, this.rng);
     this.metrics = new Metrics(config.windowMs);
     if (config.protections.bloomBitsPerKey > 0) {
-      this.bloom = new BloomFilter(config.workload.keyspace, config.protections.bloomBitsPerKey);
+      this.bloom = new BloomFilter(sample.length, config.protections.bloomBitsPerKey);
       for (const k of sample) this.bloom.add(k);
     }
 
@@ -335,8 +349,8 @@ export class Simulation {
   private tagOf(key: string): string | undefined {
     const groups = this.config.invalidation.tagGroups;
     if (groups <= 0 || isMissingKey(key)) return undefined;
-    const n = Number(key.slice(1));
-    return Number.isFinite(n) ? `g${n % groups}` : undefined;
+    const n = /^k\d+$/.test(key) ? Number(key.slice(1)) : hash32(key);
+    return `g${n % groups}`;
   }
 
   private invalidateTag(tag: string) {
