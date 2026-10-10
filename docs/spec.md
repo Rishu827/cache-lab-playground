@@ -82,3 +82,16 @@ Hit/miss ratio (cumulative and windowed), average/p50/p95/p99 latency, origin lo
 | 8 | Capstone sandbox | Meet a given latency and origin-load budget with a given cost |
 
 Scenarios are defined as data (config plus challenge predicate), so adding one means adding a file with no engine changes.
+
+## 8. Shareable state and embedding
+
+- Full config plus seed is serialized into the URL hash, so readers can share an exact scenario.
+- The `?embed=1` mode hides the chrome for iframe use in blog posts, and a scenario ID parameter picks the preset.
+
+## 9. Quality and non-functional requirements
+
+- **Determinism**: the same seed yields identical metrics. Golden-file tests per scenario protect against regressions.
+- **Correctness**: unit tests for each eviction policy and strategy against known traces.
+- **Performance**: simulate 100k events in under about 1 s. Throttle the UI rendering rather than the engine.
+- **Accessibility**: keyboard-operable controls, colors not the only signal (shapes and labels), and a reduced-motion setting.
+- **Mobile**: usable at phone width, with panels collapsing into tabs.
