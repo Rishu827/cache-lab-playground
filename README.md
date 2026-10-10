@@ -30,8 +30,21 @@ npm run build        # static build in apps/web/dist
 
 URL parameters: `?scenario=<id>` picks a preset, `?embed=1` hides the chrome for iframes. All config and the seed are stored in the URL hash, so any link reproduces the exact run.
 
-## v1 status
+## Views
 
-Done: engine (event queue, seeded RNG, workloads, FIFO/LRU/LFU/Random/TinyLFU, 5 write strategies, coalescing / TTL jitter / stale-while-revalidate, consistency oracle, failure injection), scenarios for articles 1, 2, 3, 4, 6, 8, and the full UI.
+- **Simple** (default): one story per scenario. The goal, the topology, a plain-English summary, three headline numbers, only the 2-4 controls the scenario spotlights, and one chart you can switch between metrics. Failure injection and the cache/log inspectors are tucked into collapsible sections.
+- **Full**: every control, six charts, inspector, event log, seed and single-step. Toggle in the header, or open with `?view=full`.
 
-Not yet: layers and cluster (v2; scenarios for articles 5 and 7), negative caching, Bloom filter, lock/lease, tag and versioned-key invalidation, trace file upload, golden-file snapshots.
+## What's in the engine
+
+- Discrete-event core with a seeded PRNG: same config + seed = identical run.
+- Workloads: uniform, Zipf, scan, hot-key, mixes, bursts via segments, nonexistent-key traffic, and trace replay (paste or upload).
+- Caches: FIFO, LRU, LFU, Random, TinyLFU; TTL; browser and CDN layers; N-node cluster with modulo or consistent-hash routing and add/remove node.
+- Write strategies: cache-aside, read-through, write-through, write-behind (flush + crash), write-around.
+- Protections: request coalescing, TTL jitter, lock/lease, stale-while-revalidate, negative caching, Bloom filter.
+- Invalidation: TTL, explicit delete, tags, versioned keys, deploys.
+- Consistency oracle counts stale reads and lost writes.
+
+Scenarios cover articles 1-8 plus a cache-penetration scenario. Each is checked in tests for: fails at start, passes with a known fix, rejects plausible wrong fixes, is deterministic, and matches a golden run (`packages/scenarios/test/golden/`). If an engine change moves a golden file, review the diff and update with `npx vitest run -u`.
+
+Not modelled: real network or Redis behaviour, persistence, accounts.
